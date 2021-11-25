@@ -1,9 +1,11 @@
 import React from 'react'
 
+import AddUpdateForm from '../Form/AddUpdateForm'
+
 const Admin = () => {
     return (
-        <div>
-           Create Post 
+        <div className='container m-4'>
+           <AddUpdateForm />
         </div>
     )
 }

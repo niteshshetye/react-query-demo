@@ -10,6 +10,7 @@ import Posts from './components/Posts/Posts'
 import Admin from './components/Admin'
 
 import './App.css'
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 
 const App = () => {
     return (

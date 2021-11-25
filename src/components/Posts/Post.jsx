@@ -1,37 +1,43 @@
 import React from 'react'
 
-import {useParams} from 'react-router-dom';
+// router-stuff
+import {useParams, useHistory} from 'react-router-dom';
 
-import {useQuery, queryCache} from 'react-query';
-import { getSinglePost } from '../../services/api'
+// loader-stuff
+import Loader from 'react-loader-spinner';
+import { useFetchPostById } from '../../hooks/useFetchPostById';
 
 const Post = () => {
+    const history = useHistory();
     const {id} = useParams();
 
-    const query = useQuery(['posts', id], () => getSinglePost(id), {
-      initialData: () => {
-        console.log(queryCache);
-        // queryCache.getQueryData('posts')?.filter(d => d.id === id)
-      }
-    });
-
-
+    const {isLoading, isFetching, data} = useFetchPostById(id)
+    const handleUpdate = () => {
+      history.push({
+        pathname: '/admin',
+        state: {post: data.data}
+      });
+    }
+    if(isLoading || isFetching){
+      return (
+        <div className='mt-4'>
+          <div className='d-flex justify-content-center align-self-center'>
+              <Loader 
+                type='ThreeDots'
+                color = '#DADDFC'
+              />
+            </div>
+        </div>
+      )
+    }
+  
     return (
       <div className='mt-4'>
-        {
-          query.isLoading? (
-            <div className='d-flex justify-content-center align-self-center'>
-              <div className="spinner-border" role="status">
-                  <span className="visually-hidden">Loading...</span>
-              </div>
-            </div>
-          ): (
-            <div className='container mt-4'>
-              <h1 className="display-5">{query.data.data.title}</h1>
-              <p className="lead">{query.data.data.body}</p>
-            </div>
-          )
-        }
+        <div className='container mt-4'>
+          <h1 className="display-5">{data?.data?.title}</h1>
+          <pre className="lead">{data?.data?.desc}</pre>
+          <button className='btn btn-success' onClick={handleUpdate}>Update</button>
+        </div>
       </div>
     )
 }
